@@ -3,7 +3,9 @@ const { emailValidator, passwordValidator } = require('../validators');
 const { getUrl } = require('../../../utils/getter');
 const { sendMail } = require('../../../utils/sendmail');
 
-const { confirmationEmail } = require('../../../utils/email-templates/validation.js');
+const {
+	confirmationEmail,
+} = require('../../../utils/email-templates/validation.js');
 
 const login = async (req, res) => {
 	const { email, password } = req.body;

@@ -1,5 +1,5 @@
-module.export = (name, token) => {
-  return `
+async function confirmationEmail(name, token) {
+	return `
     <html>
       <body>
         <p>Hi ${name},</p>
@@ -9,4 +9,8 @@ module.export = (name, token) => {
       </body>
     </html>
   `;
+}
+
+module.exports = {
+	confirmationEmail,
 };
