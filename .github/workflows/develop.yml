@@ -29,10 +29,10 @@ jobs:
 
       - name: Run tests
         run: |
-          if [ -d "./tests" ] || [ -f "./test.js" ]; then
-              npm test
+          if find ./tests -name '*.test.js' | xargs grep -l 'describe\|it\|test' >/dev/null; then
+            npm test
           else
-              echo "No tests found. Skipping..."
+            echo "No valid tests found. Skipping..."
           fi
 
       - name: Build
