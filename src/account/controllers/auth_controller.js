@@ -1,4 +1,4 @@
-const Account = require('../models/account_model');
+const Account = require('../model/account_model');
 const { emailValidator, passwordValidator } = require('../validators');
 const { getUrl } = require('../../../utils/getter');
 const { sendMail } = require('../../../utils/sendmail');
@@ -29,7 +29,7 @@ const login = async (req, res) => {
 			return res.status(200).json({
 				_id: account._id,
 				email: account.email,
-				token: account.generateJwt(),
+				token: 'token',
 			});
 		});
 	} catch (err) {
@@ -70,7 +70,7 @@ const register = async (req, res) => {
 			to: 'pierregi31.12@gmail.com',
 			subject: 'Validate your email address',
 			text: 'This is a test email sent from the Express app.',
-			html: confirmationEmail(account.email, account.generateJwt()),
+			html: confirmationEmail(account.email),
 		});
 		res.send('Test email sent successfully');
 	} catch (error) {

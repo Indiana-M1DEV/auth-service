@@ -1,6 +1,6 @@
 const nodemailer = require('nodemailer');
 
-module.exports = async ({ from, to, subject, text, html }) => {
+const sendMail = async ({ from, to, subject, text, html }) => {
 	const transporter = nodemailer.createTransport({
 		host: 'smtp.gmail.com',
 		port: process.env.SMTP_PORT,
@@ -27,3 +27,5 @@ module.exports = async ({ from, to, subject, text, html }) => {
 		throw error;
 	}
 };
+
+module.exports = sendMail;
