@@ -1,5 +1,5 @@
 # Main CI/CD workflow
-name: Uplearn Node.js main branch workflow
+name: Indiana Node.js main branch workflow
 
 on:
   push:

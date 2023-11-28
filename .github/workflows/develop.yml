@@ -1,5 +1,5 @@
 # Develop CI/CD workflow
-name: Uplearn Node.js develop branch workflow
+name: Indiana Node.js develop branch workflow
 
 on:
   push:
