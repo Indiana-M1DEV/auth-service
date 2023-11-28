@@ -3,6 +3,8 @@ const { emailValidator, passwordValidator } = require('../validators');
 const { getUrl } = require('../../../utils/getter');
 const { sendMail } = require('../../../utils/sendmail');
 
+const { confirmationEmail } = require('../../../utils/email-templates/validation.js');
+
 const login = async (req, res) => {
 	const { email, password } = req.body;
 
@@ -66,7 +68,7 @@ const register = async (req, res) => {
 			to: 'pierregi31.12@gmail.com',
 			subject: 'Validate your email address',
 			text: 'This is a test email sent from the Express app.',
-			html: '<p>This is a test email sent from the Express app.</p>',
+			html: confirmationEmail(account.email, account.generateJwt()),
 		});
 		res.send('Test email sent successfully');
 	} catch (error) {
