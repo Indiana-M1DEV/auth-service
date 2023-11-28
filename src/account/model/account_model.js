@@ -15,12 +15,12 @@ const accountSchema = new mongoose.Schema({
 		type: String,
 		required: true,
 	},
-    username: {
-        type: String,
-        required: true,
-        unique: true,
-        trim: true,
-    },
+	username: {
+		type: String,
+		required: true,
+		unique: true,
+		trim: true,
+	},
 	status: {
 		type: String,
 		enum: ['active', 'pending', 'inactive'],
@@ -34,11 +34,11 @@ const accountSchema = new mongoose.Schema({
 		type: Boolean,
 		default: false,
 	},
-    roles: {
-        type: String,
-        enum: ['admin', 'organisator', 'user'],
-        default: 'user',
-    },
+	roles: {
+		type: String,
+		enum: ['admin', 'organisator', 'user'],
+		default: 'user',
+	},
 	createdAt: {
 		type: Date,
 		default: Date.now,

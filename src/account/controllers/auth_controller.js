@@ -32,7 +32,7 @@ const login = async (req, res) => {
 		return res.status(500).json({ error: err.message });
 	}
 
-	return null; // To avoid eslint 
+	return null; // To avoid eslint
 };
 
 const register = async (req, res) => {
@@ -61,18 +61,18 @@ const register = async (req, res) => {
 	});
 
 	try {
-        await sendMail({
-            from: process.env.ACADEMIC_EMAIL,
-            to: 'pierregi31.12@gmail.com',
-            subject: 'Validate your email address',
-            text: 'This is a test email sent from the Express app.',
-            html: '<p>This is a test email sent from the Express app.</p>',
-        });
-        res.send('Test email sent successfully');
-    } catch (error) {
-        console.error('Error sending email:', error);
-        res.status(500).send('An error occurred while sending the email');
-    }
+		await sendMail({
+			from: process.env.ACADEMIC_EMAIL,
+			to: 'pierregi31.12@gmail.com',
+			subject: 'Validate your email address',
+			text: 'This is a test email sent from the Express app.',
+			html: '<p>This is a test email sent from the Express app.</p>',
+		});
+		res.send('Test email sent successfully');
+	} catch (error) {
+		console.error('Error sending email:', error);
+		res.status(500).send('An error occurred while sending the email');
+	}
 
 	try {
 		await account.save();

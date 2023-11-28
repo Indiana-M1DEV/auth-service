@@ -1,7 +1,7 @@
 const nodemailer = require('nodemailer');
 
 module.exports = async ({ from, to, subject, text, html }) => {
-	let transporter = nodemailer.createTransport({
+	const transporter = nodemailer.createTransport({
 		host: 'smtp.gmail.com',
 		port: process.env.SMTP_PORT,
 		secure: false,
@@ -13,17 +13,17 @@ module.exports = async ({ from, to, subject, text, html }) => {
 
 	// Send mail with defined transport object
 	try {
-		info = await transporter.sendMail({
+		const info = await transporter.sendMail({
 			from: `Do Not Reply ${from}`,
-			to: to,
-			subject: subject,
-			text: text,
-			html: html,
+			to,
+			subject,
+			text,
+			html,
 		});
+
+		console.log('Message sent: %s', info.messageId);
 	} catch (error) {
 		console.error('Error in sending email:', error);
 		throw error;
 	}
-
-	console.log('Message sent: %s', info.messageId);
 };
