@@ -14,7 +14,7 @@ module.exports = async ({ from, to, subject, text, html }) => {
 	// Send mail with defined transport object
 	try {
 		info = await transporter.sendMail({
-			from: `Do Not Reply - ${from}`,
+			from: `Do Not Reply ${from}`,
 			to: to,
 			subject: subject,
 			text: text,
