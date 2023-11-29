@@ -70,9 +70,9 @@ const register = async (req, res) => {
 
 		await sendMail({
 			from: process.env.MAILER_EMAIL,
-			to: 'pierregi31.12@gmail.com',
+			to: account.email,
 			subject: 'Validate your email address',
-			text: 'This is a test email sent from the Express app.',
+			text: '',
 			htmlContent: emailContent,
 		});
 	} catch (error) {
