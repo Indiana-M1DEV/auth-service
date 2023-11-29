@@ -4,7 +4,6 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
 const accountSchema = new mongoose.Schema({
-	_id: mongoose.Schema.Types.ObjectId,
 	email: {
 		type: String,
 		required: true,
