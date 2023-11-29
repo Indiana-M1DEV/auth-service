@@ -5,6 +5,9 @@ const {
 const Account = require('../../src/account/model/account_model');
 const httpMocks = require('node-mocks-http');
 
+// Mocking sendmail function
+jest.mock('../../utils/sendmail', () => jest.fn(() => Promise.resolve()));
+
 // Mocking mongoose model
 jest.mock('../../src/account/model/account_model');
 
@@ -68,6 +71,7 @@ describe('Auth Controller', () => {
 			req.body = {
 				email: 'new@example.com',
 				password: 'Password123',
+				username: 'newUser',
 			};
 			Account.findOne.mockResolvedValue(null);
 			const mockSave = jest
@@ -81,10 +85,12 @@ describe('Auth Controller', () => {
 			expect(mockSave).toHaveBeenCalled();
 		});
 
+		// Test for existing email
 		it('should return error for existing email', async () => {
 			req.body = {
 				email: 'existing@example.com',
 				password: 'Password123',
+				username: 'existingUser',
 			};
 			Account.findOne.mockResolvedValue({ email: 'existing@example.com' });
 
@@ -94,10 +100,12 @@ describe('Auth Controller', () => {
 			expect(res._getJSONData()).toEqual({ error: 'Email already exists' });
 		});
 
+		// Test for internal server error during account creation
 		it('should handle internal server error', async () => {
 			req.body = {
 				email: 'new@example.com',
 				password: 'Password123',
+				username: 'newUser',
 			};
 			Account.findOne.mockResolvedValue(null);
 			const mockSave = jest
@@ -108,6 +116,7 @@ describe('Auth Controller', () => {
 			await register(req, res);
 
 			expect(res.statusCode).toBe(500);
+			expect(res._getJSONData()).toEqual({ error: 'Internal server error' });
 		});
 	});
 });
