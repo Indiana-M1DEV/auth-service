@@ -35,7 +35,7 @@ const headerEmail = `
         <body>
             <div class="header-container">
                 <div class="header-content">
-                    <img src="../../../assets/images/logohd.png" alt="Indiana Logo" class="header-logo">
+                    <img src="https://pierre-gineste.fr/assets/images/logohd.png" alt="Indiana Logo" class="header-logo">
                     <h1>Indiana</h1>
                     <p>Your favourite Geocaching App</p>
                 </div>

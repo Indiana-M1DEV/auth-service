@@ -26,6 +26,7 @@ async function confirmationEmail(name, token) {
                     text-decoration: none;
                     border-radius: 5px;
                     font-weight: bold;
+                    text-decoration: none;
                 }
                 .button:hover {
                     background-color: #007BFF;
@@ -42,7 +43,7 @@ async function confirmationEmail(name, token) {
                                     <p>Hi ${name},</p>
                                     <p>Thanks for registering!</p>
                                     <p>Please click the button below to validate your account.</p>
-                                    <a href="${baseUrl}/validate/${token}" class="button">Validate</a>
+                                    <a href="${baseUrl}/validate/${token}" class="button" style="color: white; text-decoration: none; display: inline-block; padding: 10px 20px; margin: 20px 0; background-color: #0A1C2E; border-radius: 5px; font-weight: bold;">Validate</a>
                                 </td>
                             </tr>
                         </table>
