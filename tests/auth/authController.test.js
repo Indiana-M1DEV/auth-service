@@ -68,9 +68,6 @@ describe('Auth Controller', () => {
 			req.body = {
 				email: 'new@example.com',
 				password: 'Password123',
-				firstName: 'John',
-				lastName: 'Doe',
-				phoneNumber: '1234567890',
 			};
 			Account.findOne.mockResolvedValue(null);
 			const mockSave = jest
@@ -88,9 +85,6 @@ describe('Auth Controller', () => {
 			req.body = {
 				email: 'existing@example.com',
 				password: 'Password123',
-				firstName: 'John',
-				lastName: 'Doe',
-				phoneNumber: '1234567890',
 			};
 			Account.findOne.mockResolvedValue({ email: 'existing@example.com' });
 
@@ -104,9 +98,6 @@ describe('Auth Controller', () => {
 			req.body = {
 				email: 'new@example.com',
 				password: 'Password123',
-				firstName: 'John',
-				lastName: 'Doe',
-				phoneNumber: '1234567890',
 			};
 			Account.findOne.mockResolvedValue(null);
 			const mockSave = jest
