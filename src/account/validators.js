@@ -6,9 +6,18 @@ const emailValidator = (val) => {
 	return emailRegex.test(val);
 };
 
-// Minimum eight characters, at least one uppercase letter, one lowercase letter and one number
+// Minimum eight characters, at least one uppercase letter, one lowercase letter, one number and one special character
 const passwordValidator = (val) => {
-	const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/;
+	const specialChars = "!@#$%^&*()_+-=[]{}|;:',.<>/?";
+	const passwordRegex = new RegExp(
+		`^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[${specialChars.replace(
+			/[-[\]{}()*+?.,\\^$|#\s]/g,
+			'\\$&'
+		)}])[A-Za-z\\d${specialChars.replace(
+			/[-[\]{}()*+?.,\\^$|#\s]/g,
+			'\\$&'
+		)}]{8,}$`
+	);
 
 	return passwordRegex.test(val);
 };
