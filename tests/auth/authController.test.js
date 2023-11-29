@@ -1,21 +1,34 @@
 const {
 	login,
 	register,
+	verifyAccount,
 } = require('../../src/account/controllers/auth_controller');
 const Account = require('../../src/account/model/account_model');
 const httpMocks = require('node-mocks-http');
+const jwt = require('jsonwebtoken');
 
-// Mocking sendmail function
-jest.mock('../../utils/sendmail', () => jest.fn(() => Promise.resolve()));
-
-// Mocking mongoose model
 jest.mock('../../src/account/model/account_model');
+jest.mock('jsonwebtoken');
+jest.mock('../../utils/sendmail', () => jest.fn(() => Promise.resolve()));
+jest.mock('../../src/account/controllers/auth_controller', () => ({
+	...jest.requireActual('../../src/account/controllers/auth_controller'),
+	sendVerificationEmail: jest.fn().mockResolvedValue(true),
+}));
 
 describe('Auth Controller', () => {
 	let req, res;
 
+	beforeAll(() => {
+		process.env.JWT_SECRET = 'test-secret';
+	});
+
+	afterAll(() => {
+		delete process.env.JWT_SECRET;
+	});
+
 	beforeEach(() => {
 		Account.mockClear();
+		jwt.sign.mockClear();
 
 		req = httpMocks.createRequest();
 		res = httpMocks.createResponse();
@@ -63,6 +76,24 @@ describe('Auth Controller', () => {
 			await login(req, res);
 
 			expect(res.statusCode).toBe(500);
+		});
+	});
+
+	describe('verifyAccount', () => {
+		it('should verify account successfully with valid token', async () => {
+			const mockAccount = { _id: '123', status: 'pending', save: jest.fn() };
+			jwt.verify.mockReturnValue({ _id: mockAccount._id });
+			Account.findById.mockResolvedValue(mockAccount);
+
+			req.params = { token: 'valid-token' };
+			await verifyAccount(req, res);
+
+			expect(res.statusCode).toBe(200);
+			expect(mockAccount.status).toBe('active');
+			expect(mockAccount.save).toHaveBeenCalled();
+			expect(res._getJSONData()).toEqual({
+				message: 'Account verified successfully',
+			});
 		});
 	});
 

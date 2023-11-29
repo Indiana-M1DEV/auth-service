@@ -1,3 +1,5 @@
+const jwt = require('jsonwebtoken');
+
 const Account = require('../model/account_model');
 const { emailValidator, passwordValidator } = require('../validators');
 const { getUrl } = require('../../../utils/getter');
@@ -66,7 +68,28 @@ const register = async (req, res) => {
 	});
 
 	try {
-		const emailContent = await confirmationEmail(account.username, 'JWTTOKEN');
+		await account.save();
+		await sendVerificationEmail(account);
+
+		res.header('Location', getUrl(req, account._id));
+		return res.status(201).json({ _id: account._id, email: account.email });
+	} catch (err) {
+		return res.status(500).json({ error: err.message });
+	}
+};
+
+async function sendVerificationEmail(account) {
+	try {
+		const verificationToken = jwt.sign(
+			{ _id: account._id, email: account.email },
+			process.env.JWT_SECRET,
+			{ expiresIn: `${process.env.JWT_EXPIRATION_DAYS}d` }
+		);
+
+		const emailContent = await confirmationEmail(
+			account.username,
+			verificationToken
+		);
 
 		await sendMail({
 			from: process.env.MAILER_EMAIL,
@@ -76,18 +99,39 @@ const register = async (req, res) => {
 			htmlContent: emailContent,
 		});
 	} catch (error) {
-		console.error('Error sending email:', error);
-		res.status(500).send('An error occurred while sending the email');
+		console.error('Error sending verification email:', error);
+		throw new Error('Failed to send verification email');
 	}
+}
 
+const verifyAccount = async (req, res) => {
 	try {
+		const { token } = req.params;
+		const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+		const account = await Account.findById(decoded._id);
+
+		if (!account) {
+			return res.status(404).json({ error: 'Account not found' });
+		}
+
+		if (account.status !== 'pending') {
+			return res
+				.status(400)
+				.json({ error: 'Account already verified or inactive' });
+		}
+
+		account.status = 'active';
 		await account.save();
 
-		res.header('Location', getUrl(req, account._id));
-		return res.status(201).json({ _id: account._id, email: account.email });
-	} catch (err) {
-		return res.status(500).json({ error: err.message });
+		return res.status(200).json({ message: 'Account verified successfully' });
+	} catch (error) {
+		if (error.name === 'JsonWebTokenError') {
+			return res.status(401).json({ error: 'Invalid token' });
+		}
+		console.error('Error validating account:', error);
+		return res.status(500).json({ error: 'Internal server error' });
 	}
 };
 
-module.exports = { login, register };
+module.exports = { login, register, verifyAccount };
