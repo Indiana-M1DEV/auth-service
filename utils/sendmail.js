@@ -1,15 +1,25 @@
 const nodemailer = require('nodemailer');
+const header = require('./email-templates/layout/header');
+const footer = require('./email-templates/layout/footer');
 
-const sendMail = async ({ from, to, subject, text, html }) => {
+const sendMail = async ({
+	from = process.env.MAILER_EMAIL,
+	to,
+	subject,
+	text,
+	htmlContent,
+}) => {
 	const transporter = nodemailer.createTransport({
 		host: 'smtp.gmail.com',
 		port: process.env.SMTP_PORT,
 		secure: false,
 		auth: {
-			user: process.env.ACADEMIC_EMAIL,
-			pass: process.env.ACADEMIC_EMAIL_PASSWORD,
+			user: process.env.MAILER_EMAIL,
+			pass: process.env.MAILER_PASSWORD,
 		},
 	});
+
+	const html = `${header.headerEmail}${'</br>'}${htmlContent}${'</br>'}${footer.footerEmail}`;
 
 	// Send mail with defined transport object
 	try {
