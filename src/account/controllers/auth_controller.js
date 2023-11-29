@@ -1,11 +1,11 @@
 const Account = require('../model/account_model');
 const { emailValidator, passwordValidator } = require('../validators');
 const { getUrl } = require('../../../utils/getter');
-const { sendMail } = require('../../../utils/sendmail');
+const sendMail = require('../../../utils/sendmail');
 
 const {
 	confirmationEmail,
-} = require('../../../utils/email-templates/validation.js');
+} = require('../../../utils/email-templates/auth/validation/validation');
 
 const login = async (req, res) => {
 	const { email, password } = req.body;
@@ -40,9 +40,9 @@ const login = async (req, res) => {
 };
 
 const register = async (req, res) => {
-	const { email, password } = req.body;
+	const { email, password, username } = req.body;
 
-	if (!email || !password) {
+	if (!email || !password || !username) {
 		return res.status(400).json({ error: 'All fields are required' });
 	}
 
@@ -62,17 +62,19 @@ const register = async (req, res) => {
 	const account = new Account({
 		email,
 		password,
+		username,
 	});
 
 	try {
+		const emailContent = await confirmationEmail(account.username, 'JWTTOKEN');
+
 		await sendMail({
-			from: process.env.ACADEMIC_EMAIL,
+			from: process.env.MAILER_EMAIL,
 			to: 'pierregi31.12@gmail.com',
 			subject: 'Validate your email address',
 			text: 'This is a test email sent from the Express app.',
-			html: confirmationEmail(account.email),
+			htmlContent: emailContent,
 		});
-		res.send('Test email sent successfully');
 	} catch (error) {
 		console.error('Error sending email:', error);
 		res.status(500).send('An error occurred while sending the email');

@@ -1,4 +1,4 @@
-const Account = require('../models/account_model');
+const Account = require('../model/account_model');
 
 const deleteAccount = async (req, res) => {
 	const { email } = req.body;
