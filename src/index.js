@@ -5,6 +5,7 @@ const cookieSession = require('cookie-session');
 const crypto = require('crypto');
 
 require('dotenv').config();
+require('./database').connect();
 require('../src/auth_providers/passport');
 
 const app = express();
@@ -28,12 +29,15 @@ app.use(passport.session());
 
 const routes = [
 	{ path: '/auth', router: require('../src/auth_providers/router') },
+	{ path: '/account', router: require('../src/account/router') },
 ];
 
 routes.forEach((route) => {
 	if (route.secure) {
 		app.use(route.path, authenticate, route.router);
 	}
+
+	app.use(route.path, route.router);
 });
 
 app.listen(port, () => {
