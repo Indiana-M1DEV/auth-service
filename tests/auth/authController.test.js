@@ -70,7 +70,7 @@ describe('Auth Controller', () => {
 		it('should successfully register a new account', async () => {
 			req.body = {
 				email: 'new@example.com',
-				password: 'Password123',
+				password: 'Password1234.',
 				username: 'newUser',
 			};
 			Account.findOne.mockResolvedValue(null);
@@ -89,7 +89,7 @@ describe('Auth Controller', () => {
 		it('should return error for existing email', async () => {
 			req.body = {
 				email: 'existing@example.com',
-				password: 'Password123',
+				password: 'Password1234.',
 				username: 'existingUser',
 			};
 			Account.findOne.mockResolvedValue({ email: 'existing@example.com' });
@@ -104,7 +104,7 @@ describe('Auth Controller', () => {
 		it('should handle internal server error', async () => {
 			req.body = {
 				email: 'new@example.com',
-				password: 'Password123',
+				password: 'Password1234.',
 				username: 'newUser',
 			};
 			Account.findOne.mockResolvedValue(null);
