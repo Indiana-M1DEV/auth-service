@@ -1,13 +1,16 @@
 const jwt = require('jsonwebtoken');
 
-const Account = require('../model/account_model');
-const { emailValidator, passwordValidator } = require('../validators');
-const { getUrl } = require('../../../utils/getter');
-const sendMail = require('../../../utils/sendmail');
+const Account = require('../../account/model/account_model');
+const {
+	emailValidator,
+	passwordValidator,
+} = require('../../account/validators');
+const { getUrl } = require('../../utils/getter');
+const sendMail = require('../../utils/sendmail');
 
 const {
 	confirmationEmail,
-} = require('../../../utils/email-templates/auth/validation/validation');
+} = require('../../utils/email-templates/auth/validation/validation');
 
 const login = async (req, res) => {
 	const { email, password } = req.body;

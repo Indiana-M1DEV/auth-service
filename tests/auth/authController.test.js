@@ -2,16 +2,16 @@ const {
 	login,
 	register,
 	verifyAccount,
-} = require('../../src/account/controllers/auth_controller');
+} = require('../../src/auth_providers/controllers/auth_controller');
 const Account = require('../../src/account/model/account_model');
 const httpMocks = require('node-mocks-http');
 const jwt = require('jsonwebtoken');
 
 jest.mock('../../src/account/model/account_model');
 jest.mock('jsonwebtoken');
-jest.mock('../../utils/sendmail', () => jest.fn(() => Promise.resolve()));
-jest.mock('../../src/account/controllers/auth_controller', () => ({
-	...jest.requireActual('../../src/account/controllers/auth_controller'),
+jest.mock('../../src/utils/sendmail', () => jest.fn(() => Promise.resolve()));
+jest.mock('../../src/auth_providers/controllers/auth_controller', () => ({
+	...jest.requireActual('../../src/auth_providers/controllers/auth_controller'),
 	sendVerificationEmail: jest.fn().mockResolvedValue(true),
 }));
 
