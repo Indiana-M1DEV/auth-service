@@ -37,6 +37,18 @@ const accountSchema = new mongoose.Schema({
 		enum: ['admin', 'organisator', 'user'],
 		default: 'user',
 	},
+	cacheFound: {
+		type: Number,
+		default: 0,
+	},
+	cacheOrganised: {
+		type: Number,
+		default: 0,
+	},
+	collectedNFTs: {
+		type: [String],
+		default: [],
+	},
 	createdAt: {
 		type: Date,
 		default: Date.now,
@@ -78,12 +90,32 @@ accountSchema.methods.generateJwt = function () {
 		{
 			_id: this._id,
 			email: this.email,
+			username: this.username,
+			isAdmin: this.roles.includes('admin'),
+			isSubscribed: this.isSubscribed,
 		},
 		process.env.JWT_SECRET,
 		{
 			expiresIn: process.env.JWT_EXPIRATION_DAYS,
 		}
 	);
+};
+
+accountSchema.statics.findOrCreate = async function (conditions, doc) {
+	const result = await this.findOne(conditions);
+	if (result) {
+		return [result, false];
+	} else {
+		const newDoc = new this(doc);
+		await newDoc.save();
+		return [newDoc, true];
+	}
+};
+
+accountSchema.methods.toJSON = function () {
+	const obj = this.toObject();
+	delete obj.password;
+	return obj;
 };
 
 module.exports = mongoose.model('Account', accountSchema);

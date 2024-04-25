@@ -13,28 +13,32 @@ const {
 } = require('../../utils/email-templates/auth/validation/validation');
 
 const login = async (req, res) => {
-	const { email, password } = req.body;
+	const { email, username, password } = req.body;
 
 	await new Promise((resolve) => setTimeout(resolve, Math.random() * 1000));
 
 	try {
-		const account = await Account.findOne({ email });
+		const account = await Account.findOne({
+			$or: [{ email }, { username }],
+		});
 
-		if (!account) {
-			return res.status(400).json({ error: 'Email and password are invalid' });
-		}
+		if (!account) return res.status(400).json({ error: 'Invalid credentials' });
+
+		if (account.provider !== 'local')
+			return res.status(400).json({
+				error: `Account created using ${account.provider}`,
+				provider: account.provider,
+			});
 
 		account.comparePassword(password, (err, isMatch) => {
-			if (err || !isMatch) {
-				return res
-					.status(400)
-					.json({ error: 'Email and password are invalid' });
-			}
+			if (err || !isMatch)
+				return res.status(400).json({ error: 'Invalid credentials' });
 
 			return res.status(200).json({
 				_id: account._id,
 				email: account.email,
-				token: 'token',
+				username: account.username,
+				token: account.generateJwt(),
 			});
 		});
 	} catch (err) {

@@ -8,25 +8,31 @@ The Indiana Authentication Microservice is a dedicated component of the Indiana 
 - Token generation and validation
 - Password encryption and security checks
 
-## API Endpoints
+### AUTH Endpoints
 All API endpoints are prefixed with `domain:port/auth/`:
 
-### AUTH Endpoints
-
-- `POST /register`: Register a new user
-- `POST /login`: Authenticate a user
-- `POST /logout`: Log out a user
-- `GET /token/refresh`: Refresh authentication token
-- `POST /password/reset`: Initiate password reset
-- `POST /password/change`: Change user password
-- `GET /account/verify`: Verify user account
-- `GET /account/verify/resend`: Resend account verification email
+| Method | Endpoint                 | Description                       |
+|--------|--------------------------|-----------------------------------|
+| POST   | `/register`              | Register a new user               |
+| POST   | `/login`                 | Authenticate a user               |
+| GET    | `/verify`                | Verify user account (local auth)  |
+| GET    | `/validate/:token`       | Verify account with token         |
+| GET    | `/google`                | Initiate Google authentication    |
+| GET    | `/google/callback`       | Google auth callback              |
+| GET    | `/google/failure`        | Handle Google auth failure        |
 
 ### ACCOUNT Endpoints
+All API endpoints are prefixed with `domain:port/account/`:
 
-- `GET /account`: Get user account details
-- `PUT /account`: Update user account details
-- `DELETE /account`: Delete user account
+| Method | Endpoint                | Description                      |
+|--------|-------------------------|----------------------------------|
+| GET    | `/profile/:userId`      | Get user account details         |
+| GET    | `/stats/:userId`        | Get user account details         |
+| GET    | `/nfts/:userId`         | Get user account details         |
+| PUT    | `/addCache/:userId`     | Update user account details      |
+| PUT    | `/organiseCache/:userId`| Update user account details      |
+| PUT    | `/addNFT/:userId/:nftID`| Update user account details      |
+| DELETE | `/delete`               | Delete user account              |
 
 ## Getting Started
 
@@ -41,7 +47,7 @@ All API endpoints are prefixed with `domain:port/auth/`:
 4. Start the service: `npm start`
 
 ### Configuration
-Configure the service by setting the environment variables in a `.env.example` file in the project root directory.
+Configure the service by setting the environment variables from the `.env.example` file in the project root directory.
 
 ## Contributing
 Contributions to the Indiana Authentication Microservice are welcome. Please ensure to follow the project's code style and contribution guidelines.

@@ -20,8 +20,6 @@ const sendMail = async ({
 	});
 
 	const html = `${header.headerEmail}${'</br>'}${htmlContent}${'</br>'}${footer.footerEmail}`;
-
-	// Send mail with defined transport object
 	try {
 		const info = await transporter.sendMail({
 			from: `Do Not Reply ${from}`,

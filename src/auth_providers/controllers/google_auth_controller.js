@@ -9,7 +9,6 @@ const googleAuth = passport.authenticate('google', {
 const googleAuthCallback = async (req, res) => {
 	try {
 		const user = req.user[0];
-		console.log(user);
 		const email = user.email;
 		const firstName = user.firstName;
 		const lastName = user.lastName;
