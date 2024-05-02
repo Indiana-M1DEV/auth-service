@@ -1,4 +1,4 @@
-version: "3.8"
+version: '3.8'
 
 services:
   indiana-auth-api:
@@ -10,24 +10,23 @@ services:
     environment:
       - NODE_ENV=development
       - MONGO_DB_URI=mongodb://${DATABASE_LOG}:${DATABASE_PASS}@${DATABASE_HOST_NAME}:${DATABASE_PORT}/?authMechanism=${AUTH_MECANISM}?authSource=${AUTH_SOURCE}
-    container_name: auth-api
+    container_name: indiana-auth-api
     depends_on:
-      - indiana-auth-db
+      - mongodb
     volumes:
       - .:/usr/src/app
       - /usr/src/app/node_modules
     env_file:
       - .env.development
-      - .env.production
     restart: unless-stopped
-  
-  indiana-auth-db:
-      image: mongo
-      container_name: indiana-auth-db
-      ports:
-        - ${DATABASE_PORT}:${DATABASE_PORT}
-      volumes:
-          - mongo-data:/data/db
+
+  mongodb:
+    image: mongo
+    container_name: mongodb
+    ports:
+      - ${DATABASE_PORT}:${DATABASE_PORT}
+    volumes:
+      - mongo-data:/data/db
 
 volumes:
-    mongo-data:
+  mongo-data:
