@@ -12,7 +12,7 @@ services:
       - MONGO_DB_URI=mongodb://${DATABASE_LOG}:${DATABASE_PASS}@${DATABASE_HOST_NAME}:${DATABASE_PORT}/?authMechanism=${AUTH_MECANISM}?authSource=${AUTH_SOURCE}
     container_name: auth-api
     depends_on:
-      - mongodb
+      - indiana-auth-db
     volumes:
       - .:/usr/src/app
       - /usr/src/app/node_modules
@@ -21,9 +21,9 @@ services:
       - .env.production
     restart: unless-stopped
   
-  mongodb:
+  indiana-auth-db:
       image: mongo
-      container_name: mongodb
+      container_name: indiana-auth-db
       ports:
         - ${DATABASE_PORT}:${DATABASE_PORT}
       volumes:

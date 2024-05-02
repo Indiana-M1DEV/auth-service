@@ -1,0 +1,74 @@
+# Develop CI/CD workflow
+name: Indiana Node.js develop branch workflow
+
+on:
+  push:
+    branches: [develop]
+  pull_request:
+    branches: [develop]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Read .nvmrc
+        id: nvmrc
+        run: echo "NODE_VERSION=$(cat .nvmrc)" >> $GITHUB_OUTPUT
+
+      - name: Set up Node.js ${{ steps.nvmrc.outputs.NODE_VERSION }}
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{ steps.nvmrc.outputs.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run tests
+        run: |
+          if find ./tests -name '*.test.js' | xargs grep -l 'describe\|it\|test' >/dev/null; then
+            npm test
+          else
+            echo "No valid tests found. Skipping..."
+          fi
+
+      - name: Build
+        run: npm run build --if-present
+
+      - name: Archive development artifacts
+        if: success()
+        uses: actions/upload-artifact@v2
+        with:
+          name: built-artifacts
+          path: |
+            build/
+            package.json
+            package-lock.json
+            .env.development
+
+  code-quality-analysis:
+    needs: build-and-test
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Chechout code
+        uses: actions/checkout@v2
+      - name: Read .nvmrc
+        id: nvmrc
+        run: echo "NODE_VERSION=$(cat .nvmrc)" >> $GITHUB_OUTPUT
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{ steps.nvmrc.outputs.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run code Quality Tools
+        run: |
+          npm run code-quality
