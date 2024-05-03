@@ -12,6 +12,6 @@ RUN npm install
 
 COPY . .
 
-EXPOSE ${AUTH_API_PORT} ${DATABASE_PORT}
+EXPOSE ${AUTH_API_PORT}
 
 CMD ["npm", "run", "dev"]
